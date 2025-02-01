@@ -39,12 +39,18 @@ public class PostService {
      * 取得所有發文（包含作者資訊、留言、按讚數）
      */
     public List<PostResponse> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAll();// 從 PostRepository 取得所有發文
         return posts.stream()
             .map(post -> {
-                int likeCount = likeRepository.countByPostPostID(post.getPostID()); // 計算按讚數
+                int likeCount = likeRepository.countByPostPostID(post.getPostID());
+                // 是計算這篇發文的按讚數
+           
                 List<Comment> commentList = commentRepository.findByPostPostID(post.getPostID()); // 取得留言
+                //是查詢這篇發文的所有留言
+                
+                
                 return new PostResponse(post, likeCount, commentList);
+                //把 （發文）（按讚數）（留言）打包成 PostResponse，讓 API 回應完整資訊！
             })
             .collect(Collectors.toList());
     }
