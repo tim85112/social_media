@@ -49,4 +49,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid phone number or password");
         }
     }
+    @GetMapping("/login")
+    public String loginPage() {
+        return "This is the login endpoint. Please use POST method with proper credentials.";
+    }
 }

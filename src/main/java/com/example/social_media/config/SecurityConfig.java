@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 不使用 session
             .and()
             .authorizeHttpRequests() // 新版的 Spring Security 使用 authorizeHttpRequests
-                .requestMatchers("/user/login", "/user/register","/test").permitAll() // 登入和註冊和測試不需要驗證
+                .requestMatchers("/user/login", "/user/register","/test","/").permitAll() // 登入和註冊和測試不需要驗證
                 .requestMatchers("/posts/create","/likes/**").authenticated() // 允許已登入使用者發文
                 .anyRequest().authenticated() // 其他 API 都需要驗證
             .and()
