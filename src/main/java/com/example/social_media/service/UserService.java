@@ -62,6 +62,7 @@ public class UserService {
     	if (!phoneNumber.matches("^[0-9]{10}$")) {//正則表達式去過濾不對的格式
             throw new IllegalArgumentException("Invalid phone number format");
         }
+    	// 查詢用戶
         Optional<User> userOpt = userRepository.findByPhoneNumber(phoneNumber);
 
         if (userOpt.isPresent()) {

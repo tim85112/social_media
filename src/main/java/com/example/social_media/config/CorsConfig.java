@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 允許所有 API
-                        .allowedOrigins("http://localhost:3000","http://localhost:8081") // 允許的前端網址
+                        .allowedOrigins("http://localhost:3000","http://localhost:8081","http://localhost:5173") // 允許的前端網址
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 允許的 HTTP 方法
                         .allowedHeaders("*") // 允許的 Header
                         .allowCredentials(true); // 允許攜帶 Cookie
