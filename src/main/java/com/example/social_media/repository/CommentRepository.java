@@ -15,8 +15,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     void updateComment(@Param("p_commentID") Long commentID, 
                        @Param("p_userID") Long userID, 
                        @Param("p_newContent") String newContent);
-    void deleteByPostPostID(Long postID); // 刪除某篇發文的所有留言
+//    void deleteByPostPostID(Long postID); // 刪除某篇發文的所有留言
+    @Procedure(name = "DeleteComment")
+    void deleteComment(@Param("p_commentID") Long commentID, 
+                       @Param("p_userID") Long userID);
+    
+ // ✅ 新增：刪除某篇發文的所有留言 DELETE FROM comment WHERE post_id = ?;
+    void deleteByPostPostID(Long postID);
 }
+
 
 
     

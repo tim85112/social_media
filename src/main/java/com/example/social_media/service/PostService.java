@@ -152,29 +152,44 @@ public class PostService {
      * @return "SUCCESS"（刪除成功）、"NOT_FOUND"（發文不存在）、"FORBIDDEN"（無權刪除）
      */
 
-    @Transactional // 確保發文與留言刪除是同一個 Transaction
-    public String deletePost(Long userID, Long postID) {
-        Optional<Post> postOpt = postRepository.findById(postID);
+//    @Transactional // 確保發文與留言刪除是同一個 Transaction
+//    public String deletePost(Long userID, Long postID) {
+//        Optional<Post> postOpt = postRepository.findById(postID);
+//
+//        if (postOpt.isEmpty()) {
+//            return "NOT_FOUND"; // 發文不存在
+//        }
+//
+//        Post post = postOpt.get();
+//        if (!post.getUser().getUserID().equals(userID)) {
+//            return "FORBIDDEN"; // 用戶無權刪除此發文
+//        }
+//
+//        // 先刪除該發文的所有留言
+//        commentRepository.deleteByPostPostID(postID);
+//
+//        // // 故意丟出錯誤，模擬異常
+//        // if (true) throw new RuntimeException("模擬錯誤，測試回滾！");
+//
+//        // 驗證通過後刪除發文
+//        postRepository.deleteById(postID);
+//        return "SUCCESS";
+//    }
+//    
+//    @Service
+   
 
-        if (postOpt.isEmpty()) {
-            return "NOT_FOUND"; // 發文不存在
+    @Transactional // 加入 Transaction，確保資料一致性
+        public String deletePost(Long userID, Long postID) {
+            try {
+                postRepository.deletePost(postID, userID);
+                return "SUCCESS";
+            } catch (Exception e) {
+                return "FORBIDDEN"; // 無權刪除或發生錯誤
+            }
         }
+  
 
-        Post post = postOpt.get();
-        if (!post.getUser().getUserID().equals(userID)) {
-            return "FORBIDDEN"; // 用戶無權刪除此發文
-        }
-
-        // 先刪除該發文的所有留言
-        commentRepository.deleteByPostPostID(postID);
-
-        // // 故意丟出錯誤，模擬異常
-        // if (true) throw new RuntimeException("模擬錯誤，測試回滾！");
-
-        // 驗證通過後刪除發文
-        postRepository.deleteById(postID);
-        return "SUCCESS";
-    }
 
     /**
      * 新增發文

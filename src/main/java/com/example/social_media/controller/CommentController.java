@@ -31,23 +31,41 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getCommentsByPost(postID));
     }
 
-    // 刪除留言
-    @DeleteMapping("/{commentID}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long commentID, Authentication authentication) {
-        Long userID = Long.parseLong(authentication.getName());
-        String result = commentService.deleteComment(userID, commentID);
+//    // 刪除留言
+//    @DeleteMapping("/{commentID}")
+//    public ResponseEntity<String> deleteComment(@PathVariable Long commentID, Authentication authentication) {
+//        Long userID = Long.parseLong(authentication.getName());
+//        String result = commentService.deleteComment(userID, commentID);
+//
+//        switch (result) {
+//            case "NOT_FOUND":
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("留言不存在");
+//            case "FORBIDDEN":
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("無權刪除該留言");
+//            case "SUCCESS":
+//                return ResponseEntity.ok("留言刪除成功");
+//            default:
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("未知錯誤");
+//        }
+//    }
+    
+        @DeleteMapping("/{commentID}")
+        public ResponseEntity<String> deleteComment(@PathVariable Long commentID, Authentication authentication) {
+            Long userID = Long.parseLong(authentication.getName()); 
+            String result = commentService.deleteComment(userID, commentID);
 
-        switch (result) {
-            case "NOT_FOUND":
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("留言不存在");
-            case "FORBIDDEN":
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("無權刪除該留言");
-            case "SUCCESS":
-                return ResponseEntity.ok("留言刪除成功");
-            default:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("未知錯誤");
+            switch (result) {
+                case "SUCCESS":
+                    return ResponseEntity.ok("留言刪除成功");
+                case "FORBIDDEN":
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("無權刪除該留言");
+                default:
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("刪除留言失敗");
+            }
         }
-    }
+    
+    
+    
     
  // 編輯留言
     @PutMapping("/{commentID}")

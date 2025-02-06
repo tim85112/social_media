@@ -62,22 +62,34 @@ public class CommentService {
         return commentRepository.findByPostPostID(postID);
     }
 
-    // 刪除留言（僅限留言者刪除）
-    public String deleteComment(Long userID, Long commentID) {
-        Optional<Comment> commentOpt = commentRepository.findById(commentID);
-
-        if (commentOpt.isEmpty()) {
-            return "NOT_FOUND";
+//    // 刪除留言（僅限留言者刪除）
+//    public String deleteComment(Long userID, Long commentID) {
+//        Optional<Comment> commentOpt = commentRepository.findById(commentID);
+//
+//        if (commentOpt.isEmpty()) {
+//            return "NOT_FOUND";
+//        }
+//
+//        Comment comment = commentOpt.get();
+//        if (!comment.getUser().getUserID().equals(userID)) {
+//            return "FORBIDDEN";
+//        }
+//
+//        commentRepository.deleteById(commentID);
+//        return "SUCCESS";
+//    }
+    
+   
+        public String deleteComment(Long userID, Long commentID) {
+            try {
+                commentRepository.deleteComment(commentID, userID);
+                return "SUCCESS";
+            } catch (Exception e) {
+                return "FORBIDDEN"; // 無權刪除或發生錯誤
+            }
         }
+    
 
-        Comment comment = commentOpt.get();
-        if (!comment.getUser().getUserID().equals(userID)) {
-            return "FORBIDDEN";
-        }
-
-        commentRepository.deleteById(commentID);
-        return "SUCCESS";
-    }
     
 //    // 更新留言
 //    public String updateComment(Long userID, Long commentID, String newContent) {
