@@ -1,20 +1,22 @@
 package com.example.social_media.controller;
+
 import com.example.social_media.model.Post;
 import com.example.social_media.service.PostService;
+
+import java.io.IOException; // 修正 import
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Map;
 import com.example.social_media.dto.PostResponse;
-import com.example.social_media.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 
 @RestController
 @RequestMapping("/posts")
@@ -22,11 +24,12 @@ public class PostController {
 
     @Autowired
     private PostService postService;
-    
+
     /**
      * 編輯發文（僅限發文者）
-     * @param postID 要編輯的發文 ID
-     * @param requestBody 包含新的發文內容和圖片
+     * 
+     * @param postID         要編輯的發文 ID
+     * @param requestBody    包含新的發文內容和圖片
      * @param authentication 當前用戶的身份
      * @return 更新結果
      */
@@ -53,14 +56,22 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("未知錯誤");
         }
     }
+
     /**
      * 新增發文
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createPost(@RequestBody Post post, Authentication authentication) {
-        Long userID = Long.parseLong(authentication.getName()); // 取得當前登入者的 ID
-        Post newPost = postService.createPost(userID, post.getContent(), post.getImage());
-        return (newPost != null) ? ResponseEntity.ok(newPost) : ResponseEntity.badRequest().body("發文失敗");
+    public ResponseEntity<?> createPost(
+            @RequestParam("content") String content,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            Authentication authentication) {
+        try {
+            Long userID = Long.parseLong(authentication.getName());
+            Post newPost = postService.createPost(userID, content, image);
+            return (newPost != null) ? ResponseEntity.ok(newPost) : ResponseEntity.badRequest().body("發文失敗");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("圖片上傳失敗");
+        }
     }
 
     /**
@@ -85,9 +96,9 @@ public class PostController {
     @DeleteMapping("/{postID}")
     public ResponseEntity<String> deletePost(@PathVariable Long postID, Authentication authentication) {
         Long userID = Long.parseLong(authentication.getName()); // 獲取當前用戶的 ID
-        
+
         String result = postService.deletePost(userID, postID);
-        
+
         switch (result) {
             case "NOT_FOUND":
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("發文不存在");
