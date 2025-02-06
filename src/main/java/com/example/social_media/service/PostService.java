@@ -147,7 +147,6 @@ public class PostService {
 
     /**
      * 刪除發文（僅限發文者刪除）
-     * 
      * @param userID 當前用戶 ID
      * @param postID 要刪除的發文 ID
      * @return "SUCCESS"（刪除成功）、"NOT_FOUND"（發文不存在）、"FORBIDDEN"（無權刪除）

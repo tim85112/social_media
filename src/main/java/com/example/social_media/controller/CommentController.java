@@ -48,4 +48,27 @@ public class CommentController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("未知錯誤");
         }
     }
+    
+ // 編輯留言
+    @PutMapping("/{commentID}")
+    public ResponseEntity<String> updateComment(
+            @PathVariable Long commentID, 
+            @RequestBody Comment updatedComment, 
+            Authentication authentication) {
+        
+        Long userID = Long.parseLong(authentication.getName()); // 取得當前登入使用者的 ID
+        String result = commentService.updateComment(userID, commentID, updatedComment.getContent());
+
+        switch (result) {
+            case "NOT_FOUND":
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("留言不存在");
+            case "FORBIDDEN":
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("無權編輯該留言");
+            case "SUCCESS":
+                return ResponseEntity.ok("留言編輯成功");
+            default:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("未知錯誤");
+        }
+    }
+
 }

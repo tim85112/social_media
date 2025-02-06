@@ -24,8 +24,6 @@ public class CommentService {
     @Autowired
     private UserRepository userRepository;
     
-
-
     // 新增留言
     public Comment addComment(Long userID, Long postID, String content) {
         Optional<User> userOpt = userRepository.findById(userID);
@@ -79,5 +77,35 @@ public class CommentService {
 
         commentRepository.deleteById(commentID);
         return "SUCCESS";
+    }
+    
+//    // 更新留言
+//    public String updateComment(Long userID, Long commentID, String newContent) {
+//        Optional<Comment> optionalComment = commentRepository.findById(commentID);
+//
+//        if (!optionalComment.isPresent()) {
+//            return "NOT_FOUND"; // 找不到留言
+//        }
+//
+//        Comment comment = optionalComment.get();
+//        
+//        // 確保只有原留言作者可以編輯
+//        if (!comment.getUser().getUserID().equals(userID)) {  // 修正這裡
+//            return "FORBIDDEN"; // 無權限編輯
+//        }
+//
+//        comment.setContent(newContent);  // 更新內容
+//        commentRepository.save(comment); // 儲存更新
+//        return "SUCCESS"; // 回傳成功狀態
+//    }
+    
+ // 更新留言，改用 Stored Procedure
+    public String updateComment(Long userID, Long commentID, String newContent) {
+        try {
+            commentRepository.updateComment(commentID, userID, newContent);
+            return "SUCCESS";
+        } catch (Exception e) {
+            return "FORBIDDEN"; // 可能是權限不足
+        }
     }
 }
