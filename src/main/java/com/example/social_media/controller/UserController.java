@@ -21,15 +21,31 @@ public class UserController {
      * @param user 用戶的註冊資訊
      * @return 成功或失敗訊息
      */
+
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-        boolean isRegistered = userService.registerUser(user);
-        if (isRegistered) {
+        if (user == null) {
+            System.out.println("❌ User 對象為 null，請檢查請求數據！");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("請求數據錯誤");
+        }
+        System.out.println("✅ 接收到的 User：");
+        System.out.println("userName: " + user.getUserName());
+        System.out.println("phoneNumber: " + user.getPhoneNumber());
+        System.out.println("email: " + user.getEmail());
+        System.out.println("password: " + user.getPassword());
+        System.out.println("biography: " + user.getBiography());
+
+        try {
+            boolean isRegistered = userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("伺服器發生錯誤");
         }
     }
+
 
     /**
      * 登入 API：接收用戶輸入的手機號碼和密碼，調用服務層驗證身份。

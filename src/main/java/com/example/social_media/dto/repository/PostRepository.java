@@ -1,4 +1,4 @@
-package com.example.social_media.repository;
+package com.example.social_media.dto.repository;
 import com.example.social_media.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package com.example.social_media.service;
 
 import com.example.social_media.model.Post;
-import com.example.social_media.repository.PostRepository;
+import com.example.social_media.dto.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,21 +9,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+
 import com.example.social_media.dto.PostResponse;
 import com.example.social_media.model.Comment;
-import com.example.social_media.model.Post;
 import com.example.social_media.model.User;
-import com.example.social_media.repository.CommentRepository;
-import com.example.social_media.repository.LikeRepository;
-import com.example.social_media.repository.PostRepository;
-import com.example.social_media.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import com.example.social_media.dto.repository.CommentRepository;
+import com.example.social_media.dto.repository.LikeRepository;
+import com.example.social_media.dto.repository.UserRepository;
 import org.springframework.web.util.HtmlUtils;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +40,7 @@ public class PostService {
     private LikeRepository likeRepository;
 
     // 定義圖片上傳目錄
-    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_DIR = "C:\\Users\\ivan\\Desktop\\專案圖片";
 
     public Post createPost(Long userID, String content, MultipartFile image) throws IOException {
         String imagePath = null;
@@ -71,6 +65,10 @@ public class PostService {
         return postRepository.save(post);
     }
 
+
+
+
+
     private String saveImage(MultipartFile image) throws IOException {
         // 確保上傳目錄存在
         Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -83,7 +81,8 @@ public class PostService {
         Path imagePath = uploadPath.resolve(imageName);
         Files.copy(image.getInputStream(), imagePath);
 
-        return imagePath.toString();
+        // 返回相對路徑
+        return "/images/" + imageName;  // 修改這裡，返回相對路徑
     }
 
     /**

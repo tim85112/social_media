@@ -1,7 +1,7 @@
 package com.example.social_media.service;
 
 import com.example.social_media.model.User;
-import com.example.social_media.repository.UserRepository;
+import com.example.social_media.dto.repository.UserRepository;
 import com.example.social_media.util.PasswordUtil;
 import com.example.social_media.util.JwtUtil;
 
@@ -22,34 +22,41 @@ public class UserService {
      * @return 成功返回 true，失敗返回 false
      */
     public boolean registerUser(User user) {
-    	if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
-            throw new IllegalArgumentException("Phone number already exists");
+        System.out.println("✅ 開始註冊用戶");
+        System.out.println("Phone Number: " + user.getPhoneNumber());
+        System.out.println("Email: " + user.getEmail());
+
+        // 檢查手機號碼是否已存在
+        if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
+            System.out.println("❌ 手機號碼已存在");
+            throw new IllegalArgumentException("手機號碼已存在，無法註冊");
         }
+
+        // 檢查 Email 是否已存在
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            System.out.println("❌ Email 已存在");
+            throw new IllegalArgumentException("Email 已存在，無法註冊");
         }
-        try {
-        	
-        	// 防止 XSS 攻擊，清理使用者名稱
-            user.setUserName(sanitizeInput(user.getUserName()));
-            
-            
-            // 密碼加鹽與雜湊處理
-            String salt = PasswordUtil.generateSalt();
-            String hashedPassword = PasswordUtil.hashPassword(user.getPassword(), salt);
 
-            // 設定加鹽和雜湊後的密碼
-            user.setPassword(hashedPassword);
-            user.setSalt(salt);
+        // 防止 XSS 攻擊，清理使用者名稱
+        user.setUserName(sanitizeInput(user.getUserName()));
 
-            // 保存用戶到資料庫
-            userRepository.save(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        // 密碼加鹽與雜湊處理
+        String salt = PasswordUtil.generateSalt();
+        String hashedPassword = PasswordUtil.hashPassword(user.getPassword(), salt);
+
+        // 設定加鹽和雜湊後的密碼
+        user.setPassword(hashedPassword);
+        user.setSalt(salt);
+
+        // 保存用戶到資料庫
+        userRepository.save(user);
+        System.out.println("✅ 用戶註冊成功");
+        return true;
     }
+
+
+
 
     /**
      * 驗證用戶身份並生成 JWT。

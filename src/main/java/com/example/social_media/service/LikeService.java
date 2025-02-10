@@ -3,9 +3,9 @@ package com.example.social_media.service;
 import com.example.social_media.model.Like;
 import com.example.social_media.model.Post;
 import com.example.social_media.model.User;
-import com.example.social_media.repository.LikeRepository;
-import com.example.social_media.repository.PostRepository;
-import com.example.social_media.repository.UserRepository;
+import com.example.social_media.dto.repository.LikeRepository;
+import com.example.social_media.dto.repository.PostRepository;
+import com.example.social_media.dto.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 

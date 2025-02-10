@@ -3,9 +3,9 @@ package com.example.social_media.service;
 import com.example.social_media.model.Comment;
 import com.example.social_media.model.Post;
 import com.example.social_media.model.User;
-import com.example.social_media.repository.CommentRepository;
-import com.example.social_media.repository.PostRepository;
-import com.example.social_media.repository.UserRepository;
+import com.example.social_media.dto.repository.CommentRepository;
+import com.example.social_media.dto.repository.PostRepository;
+import com.example.social_media.dto.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
